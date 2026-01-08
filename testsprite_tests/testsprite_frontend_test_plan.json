@@ -1,0 +1,579 @@
+[
+  {
+    "id": "TC001",
+    "title": "User Registration with Role Selection",
+    "description": "Verify that users can register successfully by selecting either job seeker or recruiter role, and data is correctly persisted.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the registration page."
+      },
+      {
+        "type": "action",
+        "description": "Fill in the registration form with valid user details."
+      },
+      {
+        "type": "action",
+        "description": "Select 'Job Seeker' role."
+      },
+      {
+        "type": "action",
+        "description": "Submit the registration form."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify that registration is successful and user receives confirmation."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify that the user record is created in the database with role 'Job Seeker'."
+      },
+      {
+        "type": "action",
+        "description": "Repeat registration selecting 'Recruiter' role and verify similarly."
+      }
+    ]
+  },
+  {
+    "id": "TC002",
+    "title": "User Login with Valid Credentials",
+    "description": "Check that job seekers and recruiters can log in successfully with correct credentials and are redirected to their role-specific dashboards.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the login page."
+      },
+      {
+        "type": "action",
+        "description": "Enter valid username/email and password for a job seeker."
+      },
+      {
+        "type": "action",
+        "description": "Submit login."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify login is successful and user is redirected to job seeker dashboard."
+      },
+      {
+        "type": "action",
+        "description": "Log out and repeat login for a recruiter user."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify login is successful and user is redirected to recruiter dashboard."
+      }
+    ]
+  },
+  {
+    "id": "TC003",
+    "title": "Admin Login with Optional Two-Factor Authentication",
+    "description": "Verify admin can log in with correct credentials and optional 2FA when enabled; login is rejected otherwise.",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the admin login portal."
+      },
+      {
+        "type": "action",
+        "description": "Enter valid admin username and password."
+      },
+      {
+        "type": "assertion",
+        "description": "If 2FA is enabled for the admin account, system prompts for 2FA code."
+      },
+      {
+        "type": "action",
+        "description": "Enter valid 2FA code and submit."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify login is successful and admin dashboard is displayed."
+      },
+      {
+        "type": "action",
+        "description": "Attempt login with invalid 2FA code."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify login is denied with appropriate error."
+      }
+    ]
+  },
+  {
+    "id": "TC004",
+    "title": "Role-Based Access Control Enforcement",
+    "description": "Ensure users cannot access features or APIs not permitted for their roles; unauthorized access returns appropriate errors.",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Log in as a job seeker."
+      },
+      {
+        "type": "action",
+        "description": "Attempt to access recruiter-only APIs or UI pages."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify access is denied with authorization error."
+      },
+      {
+        "type": "action",
+        "description": "Log in as a recruiter."
+      },
+      {
+        "type": "action",
+        "description": "Attempt to access admin-only management APIs."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify access is denied appropriately."
+      },
+      {
+        "type": "action",
+        "description": "Attempt to call APIs with expired or invalid JWT tokens."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify requests are rejected with authentication errors."
+      }
+    ]
+  },
+  {
+    "id": "TC005",
+    "title": "Job Seeker Resume Management and ATS Scanning",
+    "description": "Verify job seekers can create, update, delete multiple resumes and perform ATS scan with Resume-Matcher integration showing scan results.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Log in as a job seeker and navigate to resume builder."
+      },
+      {
+        "type": "action",
+        "description": "Create a new resume using template selection."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the new resume is saved and listed."
+      },
+      {
+        "type": "action",
+        "description": "Run ATS scan on the resume."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify ATS optimization suggestions are returned and displayed correctly."
+      },
+      {
+        "type": "action",
+        "description": "Edit and update the resume, then save."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm changes persist successfully."
+      },
+      {
+        "type": "action",
+        "description": "Delete a resume and verify it no longer appears in the list."
+      }
+    ]
+  },
+  {
+    "id": "TC006",
+    "title": "Job Seeker Job Browsing, Filtering, and Application Tracking",
+    "description": "Test that job seekers can browse jobs with filters, save or apply for jobs, and track status via application management.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Log in as job seeker and open job browsing page."
+      },
+      {
+        "type": "action",
+        "description": "Apply various filters like location, job type, and keywords."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify job listings reflect filter criteria accurately."
+      },
+      {
+        "type": "action",
+        "description": "Save a job for later reference and verify it appears in saved jobs."
+      },
+      {
+        "type": "action",
+        "description": "Apply to a job from the listings."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm application is recorded and application status tracking is available."
+      },
+      {
+        "type": "action",
+        "description": "Check application status updates and interview scheduling linked to application."
+      }
+    ]
+  },
+  {
+    "id": "TC007",
+    "title": "Recruiter Profile Management, Job Posting and Editing",
+    "description": "Ensure recruiters can view, update their profiles and create, update, or delete job postings with changes reflected in the system.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Log in as recruiter and navigate to profile."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify profile data loads correctly."
+      },
+      {
+        "type": "action",
+        "description": "Update profile fields and save changes."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify updates persist."
+      },
+      {
+        "type": "action",
+        "description": "Create a new job posting with valid data."
+      },
+      {
+        "type": "assertion",
+        "description": "New job appears in recruiter's job listing and database."
+      },
+      {
+        "type": "action",
+        "description": "Edit an existing job posting and save."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify changes are updated correctly."
+      },
+      {
+        "type": "action",
+        "description": "Delete a job posting."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm the job is removed from the listings."
+      }
+    ]
+  },
+  {
+    "id": "TC008",
+    "title": "Recruiter Applicant Review and Auto-Ranking",
+    "description": "Verify recruiters can view applicant lists for their jobs, and applicants are ranked automatically based on ATS scores.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Log in as recruiter and navigate to applicants for a posted job."
+      },
+      {
+        "type": "assertion",
+        "description": "Applicant list loads successfully."
+      },
+      {
+        "type": "assertion",
+        "description": "Applicants are sorted by ATS scores in descending order."
+      },
+      {
+        "type": "action",
+        "description": "Change application statuses (e.g., shortlist, reject)."
+      },
+      {
+        "type": "assertion",
+        "description": "Status changes are saved and reflected appropriately."
+      }
+    ]
+  },
+  {
+    "id": "TC009",
+    "title": "Recruiter Interview Scheduling and Candidate Emails",
+    "description": "Test the ability to schedule interviews for candidates and send email notifications via recruiter dashboard.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Log in as recruiter and select a candidate for interview scheduling."
+      },
+      {
+        "type": "action",
+        "description": "Schedule interview with date/time and location details."
+      },
+      {
+        "type": "assertion",
+        "description": "Interview details are saved and visible in interviews list."
+      },
+      {
+        "type": "action",
+        "description": "Send email notification to candidate via system email function."
+      },
+      {
+        "type": "assertion",
+        "description": "Candidate receives email; system reports successful send."
+      }
+    ]
+  },
+  {
+    "id": "TC010",
+    "title": "Admin User and Recruiter Management and Suspension",
+    "description": "Verify admin can view user and recruiter lists, suspend or verify accounts, and changes persist and reflect in system behavior.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Log in as admin and navigate to user management dashboard."
+      },
+      {
+        "type": "assertion",
+        "description": "User and recruiter lists load with pagination."
+      },
+      {
+        "type": "action",
+        "description": "Suspend a user or recruiter account."
+      },
+      {
+        "type": "assertion",
+        "description": "Suspended account is marked accordingly and cannot access protected areas."
+      },
+      {
+        "type": "action",
+        "description": "Verify (activate) a suspended account."
+      },
+      {
+        "type": "assertion",
+        "description": "Account access is restored as expected."
+      }
+    ]
+  },
+  {
+    "id": "TC011",
+    "title": "Admin System Logs and Duplicate Account Detection",
+    "description": "Ensure admin can view system logs with pagination and filtering and detect and manage duplicate accounts effectively.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Log in as admin and navigate to system logs."
+      },
+      {
+        "type": "assertion",
+        "description": "Logs display consistently with options for pagination and filtering by date or type."
+      },
+      {
+        "type": "action",
+        "description": "Navigate to duplicate accounts detection dashboard."
+      },
+      {
+        "type": "assertion",
+        "description": "Potential duplicates are identified and shown correctly."
+      },
+      {
+        "type": "action",
+        "description": "Perform management actions on duplicates like merging or flagging."
+      },
+      {
+        "type": "assertion",
+        "description": "Actions complete successfully and data integrity is maintained."
+      }
+    ]
+  },
+  {
+    "id": "TC012",
+    "title": "View Tracking: Unique Views Recording and Rate Limiting",
+    "description": "Validate that profile and entity views are tracked uniquely per user/session per day, with rate limiting to prevent spamming.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Simulate views on a user profile and job listing from the same user multiple times in a day."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify only one unique view per user/session per day is counted."
+      },
+      {
+        "type": "action",
+        "description": "Simulate multiple views from different users and anonymous sessions."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify unique view counts increase accordingly."
+      },
+      {
+        "type": "action",
+        "description": "Attempt to exceed rate limit thresholds for view tracking."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify that excess requests are limited or ignored per configured rate limiting."
+      }
+    ]
+  },
+  {
+    "id": "TC013",
+    "title": "View Tracking Analytics Dashboard Data Consistency",
+    "description": "Check that the frontend analytics dashboard displays accurate daily unique visitor metrics and trends based on backend view tracking data.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Log in as admin and open analytics dashboard."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify that daily unique view counts and trend charts correspond correctly with data in backend."
+      },
+      {
+        "type": "action",
+        "description": "Cross-check view counts retrieved via API with displayed data."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify real-time updates or refreshes maintain accuracy."
+      }
+    ]
+  },
+  {
+    "id": "TC014",
+    "title": "API Authentication and Token Validation",
+    "description": "Test all protected RESTful APIs enforce JWT validation, reject requests with invalid or expired tokens, and comply with role-based access.",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Attempt API calls with missing Authorization header."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify request is denied with 401 Unauthorized."
+      },
+      {
+        "type": "action",
+        "description": "Attempt API calls with invalid or expired JWT."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify request is denied with authentication error."
+      },
+      {
+        "type": "action",
+        "description": "Call role-protected endpoints with JWT for different roles."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify access is allowed or denied in accordance with role permissions."
+      }
+    ]
+  },
+  {
+    "id": "TC015",
+    "title": "Frontend Responsive Design and Error Handling",
+    "description": "Verify that the React frontend UI renders correctly across various device sizes and gracefully handles loading states and error scenarios.",
+    "category": "ui",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Load key pages (login, dashboard, job browsing) in desktop, tablet, and mobile viewport sizes."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify UI elements scale and rearrange appropriately without overlap or clipping."
+      },
+      {
+        "type": "action",
+        "description": "Simulate slow network and observe loading indicators."
+      },
+      {
+        "type": "assertion",
+        "description": "Loading spinners or placeholders are shown consistently."
+      },
+      {
+        "type": "action",
+        "description": "Simulate API failure (e.g., backend error or network down)."
+      },
+      {
+        "type": "assertion",
+        "description": "User-friendly error messages are displayed and UI remains stable."
+      }
+    ]
+  },
+  {
+    "id": "TC016",
+    "title": "Database Schema Consistency and Migration Integrity",
+    "description": "Ensure that database schema supports all required entities and fields, migrations run successfully and no placeholder data exists after user registration.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Run all database migrations on a fresh test database."
+      },
+      {
+        "type": "assertion",
+        "description": "No migration failures occur and schema aligns with PRD requirements."
+      },
+      {
+        "type": "action",
+        "description": "Register a new user and verify database entries."
+      },
+      {
+        "type": "assertion",
+        "description": "No placeholder or static data exists; data corresponds exclusively to input."
+      },
+      {
+        "type": "action",
+        "description": "Verify presence and correctness of tables for resumes, experiences, education, applications, interviews, logs, views."
+      }
+    ]
+  },
+  {
+    "id": "TC017",
+    "title": "Environment Variable Security and JWT Secret Management",
+    "description": "Validate the system uses environment variables correctly without hardcoded secrets, and supports encrypted JWT secrets in production.",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Review application configuration for environment variable usage."
+      },
+      {
+        "type": "assertion",
+        "description": "No hardcoded secrets such as JWT keys or database passwords in source code."
+      },
+      {
+        "type": "action",
+        "description": "Configure encrypted JWT secret and verify system starts and JWT tokens validate correctly."
+      },
+      {
+        "type": "assertion",
+        "description": "Encrypted secrets are successfully decrypted at runtime and functionality is not impaired."
+      }
+    ]
+  }
+]

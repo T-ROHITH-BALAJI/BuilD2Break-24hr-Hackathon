@@ -1,0 +1,42 @@
+[
+  {
+    "id": "TC001",
+    "title": "test_login_user_authentication",
+    "description": "Verify that the /api/auth/login endpoint successfully authenticates users with valid credentials and returns a JWT token, and rejects invalid credentials with a 401 status."
+  },
+  {
+    "id": "TC002",
+    "title": "test_admin_login_with_optional_2fa",
+    "description": "Verify that the /api/admin/auth/login endpoint authenticates admin users, enforces optional two-factor authentication, and returns a JWT token on success, or a 401 status on failure."
+  },
+  {
+    "id": "TC003",
+    "title": "test_get_recruiter_profile",
+    "description": "Verify that the /api/recruiter/profile GET endpoint returns the recruiter's profile data when the profile exists, and returns a 404 status when the profile is not found."
+  },
+  {
+    "id": "TC004",
+    "title": "test_update_recruiter_profile",
+    "description": "Verify that the /api/recruiter/profile PUT endpoint updates the recruiter's profile with valid data and returns a 200 status, and returns a 404 status if the profile does not exist."
+  },
+  {
+    "id": "TC005",
+    "title": "test_track_view_endpoint",
+    "description": "Verify that the /api/views/track POST endpoint records a new view for a profile or entity, respects rate limiting and uniqueness constraints, and returns a 200 status on success."
+  },
+  {
+    "id": "TC006",
+    "title": "test_get_view_count_for_entity",
+    "description": "Verify that the /api/views/:entity/:id GET endpoint returns the correct aggregated view count for the specified entity and id with a 200 status."
+  },
+  {
+    "id": "TC007",
+    "title": "test_track_profile_view",
+    "description": "Verify that the /api/profile/view POST endpoint tracks when a user views another user's profile, respects uniqueness and rate limiting, returns 200 on success, and handles errors with a 500 status."
+  },
+  {
+    "id": "TC008",
+    "title": "test_get_unique_profile_viewer_count",
+    "description": "Verify that the /api/profile/views/{userId} GET endpoint returns the unique viewer count for the specified userId with a 200 status, and handles errors with a 500 status."
+  }
+]

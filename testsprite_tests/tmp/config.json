@@ -1,0 +1,16 @@
+{
+  "status": "commited",
+  "type": "backend",
+  "scope": "codebase",
+  "localEndpoint": "http://localhost:5173",
+  "backendAuthType": "public",
+  "executionArgs": {
+    "projectName": "CloudComputing",
+    "projectPath": "C:\\Users\\HP\\CloudComputing",
+    "testIds": [],
+    "additionalInstruction": "",
+    "envs": {
+      "API_KEY": "sk-user-lppK_E9Ks2GNRryb_z7vJeySaWX4SISbJyJx2b-H2KUvouj06Ya0nQvHm_GBdyZJIFk80sSGfkwYHCLHLxMrdin-4HZsp5KFN1IJSSSN2YAD4LVW8c19r6kC5uTLFBrKfCk"
+    }
+  }
+}

@@ -1,0 +1,134 @@
+{
+  "tech_stack": [
+    "JavaScript/TypeScript",
+    "Node.js/Express",
+    "React/Vite",
+    "PostgreSQL",
+    "TailwindCSS"
+  ],
+  "features": [
+    {
+      "name": "Auth",
+      "description": "User authentication for admins, recruiters, and jobseekers including JWT handling and optional 2FA (admin).",
+      "files": [
+        "backend/routes/authRoutes.js",
+        "backend/routes/adminAuthRoutes.js",
+        "backend/controllers/adminAuthController.js",
+        "backend/middleware/authMiddleware.js"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "info": { "title": "Auth API", "version": "1.0.0" },
+        "paths": {
+          "/api/auth/login": {
+            "post": {
+              "summary": "Login user",
+              "requestBody": { "required": true },
+              "responses": { "200": { "description": "Login success" }, "401": { "description": "Invalid credentials" } }
+            }
+          },
+          "/api/admin/auth/login": {
+            "post": {
+              "summary": "Admin login with optional 2FA",
+              "requestBody": { "required": true },
+              "responses": { "200": { "description": "Login success" }, "401": { "description": "Invalid credentials" } }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Recruiter",
+      "description": "Recruiter operations including profile read/update and job management.",
+      "files": [
+        "backend/routes/recruiterRoutes.js",
+        "backend/controllers/recruiterController.js",
+        "backend/server.js"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "info": { "title": "Recruiter API", "version": "1.0.0" },
+        "paths": {
+          "/api/recruiter/profile": {
+            "get": { "summary": "Get recruiter profile", "responses": { "200": { "description": "Profile" }, "404": { "description": "Not found" } } },
+            "put": { "summary": "Update recruiter profile", "responses": { "200": { "description": "Updated" }, "404": { "description": "Not found" } } }
+          }
+        }
+      }
+    },
+    {
+      "name": "Jobseeker",
+      "description": "Jobseeker operations including jobs, applications, ATS, resumes, and meetings.",
+      "files": [
+        "backend/routes/jobseekerRoutes.js",
+        "backend/controllers/jobseekerController.js"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "info": { "title": "Jobseeker API", "version": "1.0.0" },
+        "paths": {}
+      }
+    },
+    {
+      "name": "Admin",
+      "description": "Admin users, recruiters, logs, duplicates management, and analytics views.",
+      "files": [
+        "backend/routes/adminRoutes.js",
+        "backend/controllers/adminController.js"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "info": { "title": "Admin API", "version": "1.0.0" },
+        "paths": {}
+      }
+    },
+    {
+      "name": "View Tracking",
+      "description": "Track profile and entity views to power analytics in the frontend.",
+      "files": [
+        "backend/routes/viewsRoutes.js",
+        "backend/controllers/viewsController.js",
+        "backend/migrations/005_add_view_tracking.sql",
+        "Frontend/src/hooks/useViewTracking.js",
+        "Frontend/src/components/ViewCounter.jsx"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "info": { "title": "View Tracking API", "version": "1.0.0" },
+        "paths": {
+          "/api/views/track": {
+            "post": { "summary": "Track a view", "responses": { "200": { "description": "Tracked" } } }
+          },
+          "/api/views/:entity/:id": {
+            "get": { "summary": "Get view count", "responses": { "200": { "description": "Count" } } }
+          }
+        }
+      }
+    },
+    {
+      "name": "Profile Views",
+      "description": "Endpoints embedded in server.js for tracking and reading profile views.",
+      "files": [
+        "backend/server.js"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "info": { "title": "Profile Views API", "version": "1.0.0" },
+        "paths": {
+          "/api/profile/view": {
+            "post": { "summary": "Track that a user viewed another user's profile", "responses": { "200": { "description": "Counted or ignored" }, "500": { "description": "Error" } } }
+          },
+          "/api/profile/views/{userId}": {
+            "get": {
+              "summary": "Get unique viewer count for specified userId",
+              "parameters": [ { "name": "userId", "in": "path", "required": true, "schema": { "type": "string" } } ],
+              "responses": { "200": { "description": "View count" }, "500": { "description": "Error" } }
+            }
+          }
+        }
+      }
+    }
+  ]
+}
+
+
