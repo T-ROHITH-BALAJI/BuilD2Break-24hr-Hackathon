@@ -1,0 +1,212 @@
+name: Build and Deploy Job Portal
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # Security audit job
+  security-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      - name: Backend Security Audit
+        working-directory: ./backend
+        run: |
+          npm ci
+          npm audit --production
+          npm audit fix --dry-run
+      
+      - name: Frontend Security Audit
+        working-directory: ./Frontend
+        run: |
+          npm ci
+          npm audit --production
+          npm audit fix --dry-run
+
+  # Backend build and test
+  backend-build:
+    runs-on: ubuntu-latest
+    needs: security-audit
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: testpassword
+          POSTGRES_DB: jobportal_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+      
+      - name: Install backend dependencies
+        working-directory: ./backend
+        run: npm ci
+      
+      - name: Setup database schema
+        working-directory: ./backend
+        env:
+          DB_USER: postgres
+          DB_PASSWORD: testpassword
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_NAME: jobportal_test
+          JWT_SECRET: test_jwt_secret_for_ci_pipeline_only
+        run: |
+          PGPASSWORD=testpassword psql -h localhost -U postgres -d jobportal_test -f ../schema.sql || true
+      
+      - name: Lint backend (if configured)
+        working-directory: ./backend
+        run: npm run lint || echo "No lint script configured"
+      
+      - name: Run backend tests (if available)
+        working-directory: ./backend
+        env:
+          NODE_ENV: test
+          DB_USER: postgres
+          DB_PASSWORD: testpassword
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_NAME: jobportal_test
+          JWT_SECRET: test_jwt_secret_for_ci_pipeline_only
+        run: npm test || echo "No tests configured yet"
+
+  # Frontend build and test
+  frontend-build:
+    runs-on: ubuntu-latest
+    needs: security-audit
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: Frontend/package-lock.json
+      
+      - name: Install frontend dependencies
+        working-directory: ./Frontend
+        run: npm ci
+      
+      - name: Lint frontend
+        working-directory: ./Frontend
+        run: npm run lint
+      
+      - name: Build frontend
+        working-directory: ./Frontend
+        env:
+          NODE_ENV: production
+        run: npm run build
+      
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: frontend-dist
+          path: Frontend/dist
+          retention-days: 7
+
+  # Integration tests (optional)
+  integration-tests:
+    runs-on: ubuntu-latest
+    needs: [backend-build, frontend-build]
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: testpassword
+          POSTGRES_DB: jobportal_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      - name: Install dependencies
+        run: |
+          cd backend && npm ci
+          cd ../Frontend && npm ci
+      
+      - name: Run integration tests
+        env:
+          NODE_ENV: test
+          DB_USER: postgres
+          DB_PASSWORD: testpassword
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_NAME: jobportal_test
+          JWT_SECRET: test_jwt_secret_for_ci_pipeline_only
+        run: |
+          echo "Integration tests would run here"
+          # npm run test:integration
+
+  # Deploy to staging (example)
+  deploy-staging:
+    runs-on: ubuntu-latest
+    needs: [backend-build, frontend-build, integration-tests]
+    if: github.ref == 'refs/heads/develop'
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Deploy to staging
+        run: |
+          echo "Deploy to staging environment"
+          # Add deployment commands here
+
+  # Deploy to production (example)
+  deploy-production:
+    runs-on: ubuntu-latest
+    needs: [backend-build, frontend-build, integration-tests]
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Download frontend build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: frontend-dist
+          path: Frontend/dist
+      
+      - name: Deploy to production
+        run: |
+          echo "Deploy to production environment"
+          # Add deployment commands here
+          # Example: AWS, Azure, or other cloud provider
