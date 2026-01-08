@@ -1,16 +1,83 @@
-# Job Portal - Full Stack Application
+# Job Portal - Applicant Tracking System (ATS)
 
-A comprehensive job portal application built with React (Frontend) and Node.js + Express + PostgreSQL (Backend).
+A comprehensive, enterprise-grade job portal and Applicant Tracking System built with modern web technologies. This platform connects job seekers with recruiters and provides powerful tools for managing the entire recruitment lifecycle.
 
-## �️ Tech Stack
+## 📋 Project Overview
+
+This Job Portal ATS is a full-stack web application designed for the Build2Break Hackathon. It provides a complete recruitment ecosystem with three distinct user roles:
+
+- **Job Seekers**: Create profiles, upload resumes, search and apply for jobs
+- **Recruiters**: Post jobs, review applications, rank candidates, schedule interviews
+- **Administrators**: Manage users, monitor system activity, access analytics
+
+### Key Features
+
+✨ **For Job Seekers:**
+- Profile creation with skills and experience tracking
+- Multiple resume upload and management
+- Advanced job search and filtering
+- One-click job applications
+- Application status tracking
+- Interview scheduling and notifications
+
+✨ **For Recruiters:**
+- Job posting and management
+- AI-powered candidate ranking based on skills match
+- Applicant filtering and search
+- Email communication with candidates
+- Interview scheduling and calendar management
+- Profile view tracking for job posts
+
+✨ **For Administrators:**
+- User management (create, approve, suspend users)
+- Recruiter approval workflow
+- System logs and analytics
+- Database monitoring and health checks
+
+✨ **Security & Analytics:**
+- JWT-based authentication with role-based access control
+- 2FA (Two-Factor Authentication) support
+- View tracking and unique visitor metrics
+- Profile view analytics for recruiters
+- Comprehensive audit logging
+
+## 🏗️ Tech Stack
 
 | Layer | Technology |
 |-------|------------|
 | **Frontend** | React 18, Vite, Tailwind CSS, React Router |
 | **Backend** | Node.js 18, Express.js, JWT Authentication |
 | **Database** | PostgreSQL 15+ / **Supabase** (Cloud PostgreSQL) |
-| **Deployment** | Docker, Docker Compose, GitHub Actions CI/CD |
-| **Cloud** | Azure Static Web Apps, Supabase |
+| **Deployment** | Docker, Docker Compose, Nginx |
+| **Cloud** | Supabase, ngrok (optional) |
+| **Testing** | Playwright, Jest, Manual Test Suites |
+
+## 🎯 Project Architecture
+
+```
+┌─────────────────┐      ┌─────────────────┐      ┌─────────────────┐
+│                 │      │                 │      │                 │
+│   React SPA     │─────▶│  Express API    │─────▶│   PostgreSQL    │
+│  (Port 80)      │      │  (Port 5000)    │      │  (Port 5432)    │
+│                 │      │                 │      │                 │
+└─────────────────┘      └─────────────────┘      └─────────────────┘
+     Nginx                   Node.js                 Database
+```
+
+### Database Schema
+
+The application uses a robust PostgreSQL schema with the following main tables:
+- `jobseekers` - Job seeker profiles and authentication
+- `resumes` - Multiple resume support for job seekers
+- `recruiters` - Recruiter profiles and company information
+- `jobs` - Job postings with detailed requirements
+- `applications` - Job applications with status tracking
+- `interviews` - Interview scheduling and management
+- `admin_users` - Administrative accounts
+- `profile_views` - Analytics for profile and job views
+- `system_logs` - Audit trail for security and monitoring
+
+See [SQL_DOCUMENTATION.md](SQL_DOCUMENTATION.md) for complete schema details.
 
 ## 🗄️ Database - Supabase
 

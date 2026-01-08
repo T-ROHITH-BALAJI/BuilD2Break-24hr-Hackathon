@@ -2,13 +2,24 @@ import 'dotenv/config';   // Loads .env automatically in ESM
 import pkg from 'pg';
 const { Pool } = pkg;
 
-const pool = new Pool({
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD?.toString(),
-  port: Number(process.env.DB_PORT || 5432),
-});
+// Use DATABASE_URL if available (Supabase), otherwise use individual params
+const poolConfig = process.env.DATABASE_URL 
+  ? {
+      connectionString: process.env.DATABASE_URL,
+      ssl: { rejectUnauthorized: false }
+    }
+  : {
+      user: process.env.DB_USER,
+      host: process.env.DB_HOST,
+      database: process.env.DB_NAME,
+      password: process.env.DB_PASSWORD?.toString(),
+      port: Number(process.env.DB_PORT || 5432),
+      ssl: process.env.DB_HOST && process.env.DB_HOST.includes('supabase') 
+        ? { rejectUnauthorized: false }
+        : false
+    };
+
+const pool = new Pool(poolConfig);
 
 pool.connect()
   .then(client => {
